@@ -1,7 +1,8 @@
+# Purpose
+- kobuki, RPlidar 를 이용하여 SLAM navigation 
 # 작동관련
 - $ roslaunch kobuki_node minimal.launch
 - $ roslaunch kobuki_keyop safe_keyop.launch
-
 1. kobuki_noetic.sh install
 - $ bash kobuki_noetic.sh
 
@@ -78,7 +79,7 @@ udev 는 시스템에 연결된 장치의 노드를 그 연결순서와 상관�
 
 
 
-### 작동 순서
+### RPlidar, kobuki slam  
 ```
 roslaunch kobuki_node minimal.launch # turn on robot
 roslaunch kobuki_slam kobuki_slam.launch
