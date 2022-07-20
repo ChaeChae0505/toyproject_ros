@@ -64,3 +64,4 @@ udev 는 시스템에 연결된 장치의 노드를 그 연결순서와 상관�
 - [wiki](http://wiki.ros.org/kobuki/Tutorials/Examine%20Kobuki)
 - [turtlebot2 RPlidarA2](https://surfertas.github.io/ros/2020/07/11/turtlebot2-lidar.html)
 - [Justin](https://soohwan-justin.tistory.com/)
+- [Lidar 측정원리](https://en.wikipedia.org/wiki/LIDAR)
