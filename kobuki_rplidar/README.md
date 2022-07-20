@@ -1,5 +1,7 @@
 # Purpose
-- kobuki, RPlidar 를 이용하여 SLAM navigation 
+- kobuki, RPlidar 를 이용하여 SLAM navigation 을 통해 DWA 알고리즘을 이용하여 목적지까지 이동할 때 동적물체 발생 시 대처 반응 확인 실험 
+
+
 # 작동관련
 - $ roslaunch kobuki_node minimal.launch
 - $ roslaunch kobuki_keyop safe_keyop.launch
