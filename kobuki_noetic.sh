@@ -26,3 +26,7 @@ catkin_make
 
 source ~/kobuki_ws/devel/setup.bash
 rosrun kobuki_ftdi create_udev_rules
+
+# 작동관련
+# roslaunch kobuki_node minimal.launch
+# roslaunch kobuki_keyop safe_keyop.launch
