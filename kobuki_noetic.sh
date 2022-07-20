@@ -24,5 +24,5 @@ cd .. && rmdir save
 cd ~/kobuki_ws/
 catkin_make
 
-
+source ~/kobuki_ws/devel/setup.bash
 rosrun kobuki_ftdi create_udev_rules
