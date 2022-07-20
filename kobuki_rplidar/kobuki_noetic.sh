@@ -12,10 +12,8 @@ git clone https://github.com/yujinrobot/yujin_ocs.git
 git clone https://github.com/yujinrobot/kobuki_msgs.git
 git clone https://github.com/yujinrobot/kobuki_core.git
 git clone https://github.com/robopeak/rplidar_ros.git
+git clone https://github.com/oroca/rosbook_kobuki.git
 
-cd turtlebot2_lidar
-bash turtlebot_env.sh
-cd ..
 
 cd yujin_ocs
 mkdir save 
