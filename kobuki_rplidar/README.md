@@ -56,11 +56,11 @@ KERNEL=="ttyUSB*", MODE="0666"
 udev 는 시스템에 연결된 장치의 노드를 그 연결순서와 상관없이 연결될 때마다 동적으로 제공하는 일종의 장치관리자로서, 장치가 연결 될 때 장치명과, 권한 등을 정해준다. 이 때 그 규칙이 기재된 파일을 참조하게 되는데, 우분투의 경우 '/etc/udev/rules.d/70-persistent-net.rules'파일이 바로 그 파일이다.
 ```
 ### 변경해야할 부분
-
 1. Lidar sensor change
 -[oroca](https://cafe.naver.com/openrt/6258)
 - 위를 따라갈 예정이다 하지만 나는 RPlidar A2를 사용할 것이기 떄문애 변경해 주어야한다.
 - "kobuki_slam.launch" 파일에 urg node를 제와하고 RPlidar 부분을 넣을 것이다.
+- "kobuki_navigation.launch" file 역시 동일하게 센서 부분을 변경해 준다.
 ```xml
 <launch>
   <!--node pkg="urg_node" type="urg_node" name="kobuki_urg_node" output="screen">
@@ -75,6 +75,16 @@ udev 는 시스템에 연결된 장치의 노드를 그 연결순서와 상관�
         <param name="inverted"            type="bool"   value="false"/>
         <param name="angle_compensate"    type="bool"   value="true"/>
   </node>
+```
+
+2. Noetic 마이그레이션 가이드에 따르면
+- navgiation file에 xacro를 불러 올때 ".py"를 지우고 xacro.py 가아닌 xacro 로 
+```xml
+<launch>
+
+  <!-- kobuki model -->
+  <arg name="urdf_file" default="$(find xacro)/xacro '$(find kobuki_description)/urdf/kobuki_standalone.urdf.xacro'" />
+  <param name="robot_description" command="$(arg urdf_file)" />
 ```
 
 
