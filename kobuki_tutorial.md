@@ -56,9 +56,11 @@ KERNEL=="ttyUSB*", MODE="0666"
 udev 는 시스템에 연결된 장치의 노드를 그 연결순서와 상관없이 연결될 때마다 동적으로 제공하는 일종의 장치관리자로서, 장치가 연결 될 때 장치명과, 권한 등을 정해준다. 이 때 그 규칙이 기재된 파일을 참조하게 되는데, 우분투의 경우 '/etc/udev/rules.d/70-persistent-net.rules'파일이 바로 그 파일이다.
 ```
 
-
+3. Sensor 구동
+- $ roslaunch rplidar_ros rplidar.launch
 
 
 ## [Reference]
 - [wiki](http://wiki.ros.org/kobuki/Tutorials/Examine%20Kobuki)
 - [turtlebot2 RPlidarA2](https://surfertas.github.io/ros/2020/07/11/turtlebot2-lidar.html)
+- [Justin](https://soohwan-justin.tistory.com/)
