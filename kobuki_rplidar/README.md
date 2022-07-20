@@ -106,6 +106,50 @@ rosrun map_server map_saver # map 저장
 1. Sensor 구동
 - $ roslaunch rplidar_ros rplidar.launch
 
+2.tf 를 확인 해보자
+```cpp
+// tf 차이가 있을 줄 알았는데 원본 git과 동일했다. 나는 2번째 칸에 RPLiDAR 를 설치해서 그런 것일 수도 있다
+#include <ros/ros.h>
+#include <tf/transform_broadcaster.h>
+
+int main(int argc, char** argv){
+  ros::init(argc, argv, "kobuki_tf");
+  ros::NodeHandle n;
+
+  ros::Rate r(100);
+
+  tf::TransformBroadcaster broadcaster;
+
+  while(n.ok()){
+    broadcaster.sendTransform(
+      tf::StampedTransform(
+        tf::Transform(
+          tf::Quaternion(0, 0, 0, 1),
+          tf::Vector3(0.0, 0.0, 0.01)),
+          ros::Time::now(),
+          "base_footprint",
+          "base_link"));
+
+    broadcaster.sendTransform(
+      tf::StampedTransform(
+        tf::Transform(
+          tf::Quaternion(0, 0, 0, 1),
+          tf::Vector3(0.0, 0.0, 0.24)),
+          ros::Time::now(),
+          "base_link",
+          "base_scan"));
+
+    r.sleep();
+  }
+}
+```
+![rplida](./Pictures/rplida.png)
+![tf](./Pictures/tf.png)
+
+3. rviz를 띄우고 골을 주면서 왜 안되냐! 라는 생각을 했었는데 
+- nav rviz를 안 띄우고 slam rviz를 띄웠었다,,,,, 왼(slam), 오(nav)
+![Slam, nav](./Pictures/slam_nav.png)
+
 
 ## [Reference]
 - [wiki](http://wiki.ros.org/kobuki/Tutorials/Examine%20Kobuki)
