@@ -2,7 +2,6 @@
 - $ roslaunch kobuki_node minimal.launch
 - $ roslaunch kobuki_keyop safe_keyop.launch
 
-## Kobuki with RPLidar slam, navigation
 1. kobuki_noetic.sh install
 - $ bash kobuki_noetic.sh
 
@@ -55,8 +54,43 @@ KERNEL=="ttyUSB*", MODE="0666"
 
 udev 는 시스템에 연결된 장치의 노드를 그 연결순서와 상관없이 연결될 때마다 동적으로 제공하는 일종의 장치관리자로서, 장치가 연결 될 때 장치명과, 권한 등을 정해준다. 이 때 그 규칙이 기재된 파일을 참조하게 되는데, 우분투의 경우 '/etc/udev/rules.d/70-persistent-net.rules'파일이 바로 그 파일이다.
 ```
+### 변경해야할 부분
 
-3. Sensor 구동
+1. Lidar sensor change
+-[oroca](https://cafe.naver.com/openrt/6258)
+- 위를 따라갈 예정이다 하지만 나는 RPlidar A2를 사용할 것이기 떄문애 변경해 주어야한다.
+- "kobuki_slam.launch" 파일에 urg node를 제와하고 RPlidar 부분을 넣을 것이다.
+```xml
+<launch>
+  <!--node pkg="urg_node" type="urg_node" name="kobuki_urg_node" output="screen">
+    <param name="frame_id" value="base_scan" />
+  </node-->
+  <!-- LIDAR -->
+  <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
+        <param name="serial_port"         type="string" value="/dev/ttyUSB0"/>
+        <param name="serial_baudrate"     type="int"    value="115200"/><!--A1/A2 -->
+        <!--param name="serial_baudrate"     type="int"    value="256000"--><!--A3 -->
+        <param name="frame_id"            type="string" value="base_scan"/>
+        <param name="inverted"            type="bool"   value="false"/>
+        <param name="angle_compensate"    type="bool"   value="true"/>
+  </node>
+```
+
+
+
+### 작동 순서
+```
+roslaunch kobuki_node minimal.launch # turn on robot
+roslaunch kobuki_slam kobuki_slam.launch
+rosrun rviz rviz -d `rospack find kobuki_slam`/rviz/kobuki_slam.rviz #rviz 실행
+roslaunch kobuki_keyop safe_keyop.launch # robot 조종
+rosrun map_server map_saver # map 저장
+
+
+```
+
+## ETC
+1. Sensor 구동
 - $ roslaunch rplidar_ros rplidar.launch
 
 
