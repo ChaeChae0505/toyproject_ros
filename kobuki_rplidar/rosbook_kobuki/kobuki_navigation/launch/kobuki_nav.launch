@@ -1,0 +1,79 @@
+<launch>
+  <arg name="move_forward_only" default="false"/>
+  <arg name="open_rviz" default="true"/>
+  <!-- TF -->
+  <node pkg="kobuki_tf" type="kobuki_tf" name="kobuki_tf" output="screen">
+  </node>
+
+    <!-- LIDAR -->
+    <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
+        <param name="serial_port"         type="string" value="/dev/ttyUSB0"/>
+        <param name="serial_baudrate"     type="int"    value="115200"/><!--A1/A2 -->
+        <!--param name="serial_baudrate"     type="int"    value="256000"--><!--A3 -->
+        <param name="frame_id"            type="string" value="base_scan"/>
+        <param name="inverted"            type="bool"   value="false"/>
+        <param name="angle_compensate"    type="bool"   value="true"/>
+    </node>
+
+
+  <!-- BRING UP KOBUKI -->
+    <arg name="kobuki_publish_tf" default="true"/> <!-- Publish base_footprint - odom transforms (usually good thing to have for localisation) -->
+
+     <node pkg="nodelet" type="nodelet" name="mobile_base_nodelet_manager" args="manager"/>
+
+     <node pkg="nodelet" type="nodelet" name="mobile_base" args="load kobuki_node/KobukiNodelet mobile_base_nodelet_manager">
+       <rosparam file="$(find kobuki_node)/param/base.yaml" command="load"/>
+       <param name="publish_tf" value="$(arg kobuki_publish_tf)"/>
+       <remap from="mobile_base/odom" to="odom"/>
+       <remap from="mobile_base/joint_states" to="joint_states"/>
+     </node>
+
+     <node pkg="diagnostic_aggregator" type="aggregator_node" name="diagnostic_aggregator" >
+       <rosparam command="load" file="$(find kobuki_node)/param/diagnostics.yaml" />
+     </node>
+
+  <!-- kobuki model -->
+  <arg name="urdf_file" default="$(find xacro)/xacro '$(find kobuki_description)/urdf/kobuki_standalone.urdf.xacro'" />
+  <param name="robot_description" command="$(arg urdf_file)" />
+
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
+    <param name="publish_frequency" type="double" value="5.0"/>
+  </node>
+
+  <!-- kobuki control option 
+  <include file="$(find kobuki_navigation)/launch/velocity_smoother.launch.xml"/>
+  <include file="$(find kobuki_navigation)/launch/safety_controller.launch.xml"/> 
+  -->
+
+
+  <!-- Map server -->
+  <arg name="map_file" default="$(find kobuki_navigation)/maps/map.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)">
+  </node>
+
+  <!-- AMCL -->
+  <include file="$(find kobuki_navigation)/launch/amcl.launch.xml"/>
+
+  <!-- move_base -->  
+  <arg name="cmd_vel_topic" default="/mobile_base/commands/velocity" />
+  <arg name="odom_topic" default="odom" />
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <!--param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" /-->
+    <rosparam file="$(find kobuki_navigation)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find kobuki_navigation)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find kobuki_navigation)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find kobuki_navigation)/param/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find kobuki_navigation)/param/dwa_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find kobuki_navigation)/param/move_base_params.yaml" command="load" />
+    <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
+    <remap from="odom" to="$(arg odom_topic)"/>
+    <!--param name="DWAPlannerROS/min_vel_x" value="0.0" if="$(arg move_forward_only)" /-->
+  </node>
+
+
+  <!-- rviz -->
+  <group if="$(arg open_rviz)">
+  	<node pkg="rviz" type="rviz" name="rviz" required="true"
+  		args="-d $(find kobuki_navigation)/rviz/kobuki_nav.rviz"/>
+  </group>
+</launch>
