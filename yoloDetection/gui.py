@@ -3,17 +3,26 @@
 #                 --source /home/a307/Sejong/AutoLabeling/dataset/Batch010203_rev1/val/images
 
 
+#python detect.py --img 640 --data data/Sejong.yaml --weights runs/train/sejong_batch010203_rev1/weights/best.pt --name sejong_batch010203_rev1 --save-txt\
+#                 --source /home/a307/Sejong/AutoLabeling/dataset/Batch010203_rev1/val/images
+
+
 from tkinter import *
 from tkinter import filedialog
 import tkinter
 import tkinter.font
 import subprocess
 
+
+size = "640"
+# dataload = "data/Sejong.yaml"
+# ptfile = "runs/train/sejong_batch010203_rev1/weights/best.pt"
+# sourcefile = "/home/a307/Sejong/AutoLabeling/dataset/Batch010203_rev1/val/images"
     
 
 def Load_pt(txt_dest_path):
-    filename = filedialog.askopenfilename(initialdir="/", title="Select file",
-                                          filetypes=(("pt file", "*.pt"),
+    filename = filedialog.askopenfilename(initialdir="../", title="Select file",
+                                          filetypes=((".pt file open", "*.pt"),
                                           ("all files", "*.*")))
     if filename is None: # 사용자가 취소를 누를 때
         return
@@ -22,19 +31,13 @@ def Load_pt(txt_dest_path):
     print(filename)
 
 def Load_yaml(txt_dest_path):
-    filename = filedialog.askopenfilename(initialdir="/", title="Select file",
-                                          filetypes=(("yaml file", "*.yaml"),
+    filename = filedialog.askopenfilename(initialdir="../", title="Select file",
+                                          filetypes=((".yaml file open", "*.yaml"),
                                           ("all files", "*.*")))
     if filename is None: # 사용자가 취소를 누를 때
         return
     txt_dest_path.delete(0, END)
     txt_dest_path.insert(0, filename)
-    print(filename)
-
-def Save():
-    filename = filedialog.asksaveasfilename(initialdir="/", title="Select file",
-                                          filetypes=(("PPTX files", "*.pptx"),
-                                          ("all files", "*.*")))
     print(filename)
 
 def domenu():
@@ -48,17 +51,13 @@ def path(): # path load
 
 # 저장 경로 (폴더)
 def browse_dest_path(txt_dest_path):
-    folder_selected = filedialog.askdirectory()
+    folder_selected = filedialog.askdirectory(initialdir="../",)
     if folder_selected is None: # 사용자가 취소를 누를 때
         return
     txt_dest_path.delete(0, END)
     txt_dest_path.insert(0, folder_selected)
     return folder_selected
 
-size = "640"
-# dataload = "data/Sejong.yaml"
-# ptfile = "runs/train/sejong_batch010203_rev1/weights/best.pt"
-# sourcefile = "/home/a307/Sejong/AutoLabeling/dataset/Batch010203_rev1/val/images"
 
 # 시작
 def start(yolo):
@@ -72,34 +71,34 @@ root = Tk()
 font=tkinter.font.Font(family="맑은 고딕", size=30, slant="italic")
 
 # 저장 경로 프레임
-path_frame1 = LabelFrame(root, text="data load .yaml")
+path_frame1 = LabelFrame(root, text="File load(.yaml)")
 path_frame1.pack(fill="x", padx=5, pady=5, ipady=5)
 
 txt_dest_path1 = Entry(path_frame1)
 txt_dest_path1.pack(side="left", fill="x", expand=True, padx=5, pady=5, ipady=4) # 높이 변경
 
-btn_dest_path1 = Button(path_frame1, text="찾아보기", width=10, command=lambda : Load_yaml(txt_dest_path1))
+btn_dest_path1 = Button(path_frame1, text="Search", width=10, command=lambda : Load_yaml(txt_dest_path1))
 result_yaml = btn_dest_path1.pack(side="right", padx=5, pady=5)
 
 
 # 저장 경로 프레임
-path_frame2 = LabelFrame(root, text="pt_load")
+path_frame2 = LabelFrame(root, text="File load(.pt)")
 path_frame2.pack(fill="x", padx=5, pady=5, ipady=5)
 
 txt_dest_path2 = Entry(path_frame2)
 txt_dest_path2.pack(side="left", fill="x", expand=True, padx=5, pady=5, ipady=4) # 높이 변경
 
-btn_dest_path2 = Button(path_frame2, text="찾아보기", width=10, command=lambda : Load_pt(txt_dest_path2))
+btn_dest_path2 = Button(path_frame2, text="Search", width=10, command=lambda : Load_pt(txt_dest_path2))
 result_pt = btn_dest_path2.pack(side="right", padx=5, pady=5)
 
 # 저장 경로 프레임
-path_frame3 = LabelFrame(root, text="source dir")
+path_frame3 = LabelFrame(root, text="Source directory")
 path_frame3.pack(fill="x", padx=5, pady=5, ipady=5)
 
 txt_dest_path3 = Entry(path_frame3)
 txt_dest_path3.pack(side="left", fill="x", expand=True, padx=5, pady=5, ipady=4) # 높이 변경
 
-btn_dest_path3 = Button(path_frame3, text="찾아보기", width=10, command=lambda : browse_dest_path(txt_dest_path3))
+btn_dest_path3 = Button(path_frame3, text="Search", width=10, command=lambda : browse_dest_path(txt_dest_path3))
 result_dir = btn_dest_path3.pack(side="right", padx=5, pady=5)
 
 dataload = result_yaml
@@ -122,10 +121,10 @@ print(yolo)
 frame_run = Frame(root)
 frame_run.pack(fill="x", padx=5, pady=5)
 
-btn_close = Button(frame_run, padx=5, pady=5, text="닫기", width=12, command=root.quit)
+btn_close = Button(frame_run, padx=5, pady=5, text="Close", width=12, command=root.quit)
 btn_close.pack(side="right", padx=5, pady=5)
 
-btn_start = Button(frame_run, padx=5, pady=5, text="시작", width=12, command=lambda : start(yolo))
+btn_start = Button(frame_run, padx=5, pady=5, text="Start", width=12, command=lambda : start(yolo))
 btn_start.pack(side="right", padx=5, pady=5)
 
 
